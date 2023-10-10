@@ -155,7 +155,6 @@ public boolean isLeaf() {
 }
 
 public double value(int agent) {
-	int winner = -1;
 	if (food == 0) {
 		if (score[0]>score[1]) {
 			if (agent == 0) {
