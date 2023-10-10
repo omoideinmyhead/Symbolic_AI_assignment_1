@@ -174,7 +174,36 @@ public double value(int agent) {
 		return -1;
 	}
 	return 0;
-}	
+}
+public State minimax(State s, int forAgent, int maxDepth, int depth) {
+	//base case, just returns itself
+	if (s.isLeaf() || depth == maxDepth){
+		return s;
+	}
+	//general case finds the best value possible given the depth and return that state
+	//min -> min opponent score found in search; returnState -> remembers the state to be returned; forAgent changes to other agent
+	int min = 2;
+	State returnState = new State();
+	forAgent = ((forAgent == 0) ? 1 : 0);
+	// loop goes through all legal moves and finds the minimum value that the opponent can achieve finding the move that yields in min possible score for opponent
+	for (String move: s.legalMoves()){
+		State nextState = s.copy();
+		nextState.execute(move);
+		State minimax = minimax(nextState, forAgent, maxDepth, depth+1);
+		if (minimax.value(forAgent)< min){
+			//special case depth = 0 doesn't return the leaf or max depth node but the next state that produced it
+			if (depth == 0) {
+				returnState = nextState;
+			}
+			//in other depths it returns the leaf
+			else {
+				returnState = minimax;
+			}
+		}
+		
+	}
+	return returnState;
+}
 }
 
 

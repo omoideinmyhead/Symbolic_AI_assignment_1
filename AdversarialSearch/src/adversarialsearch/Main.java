@@ -14,13 +14,7 @@ public class Main {
 		System.out.println(table.toString());
 		Game g=new Game();
 
-		
-		
 		g.test();
-		
-		
-		
-		
-		
+			
 	}
 }
