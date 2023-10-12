@@ -23,36 +23,30 @@ public class Game {
 		}
 		// general case finds the best value possible given the depth and return that
 		// state
-		// min -> min opponent score found in search; returnState -> remembers the state
-		// to be returned; forAgent changes to other agent
-		int min = 2;
+		// max -> max score found in search; returnState -> remembers the state
+		// to be returned; nextForAgent changes to other agent next turn instead of using min
+		int max = -2;
 		State returnState = new State();
-		forAgent = ((forAgent == 0) ? 1 : 0);
-//		System.out.println(forAgent);
+		int nextForAgent = ((forAgent == 0) ? 1 : 0);
 		// loop goes through all legal moves and finds the minimum value that the
 		// opponent can achieve finding the move that yields in min possible score for
 		// opponent
 		for (String move : s.legalMoves()) {
 			State nextState = s.copy();
 			nextState.execute(move);
-			System.out.println(String.format("%d,%d", forAgent, depth));
-//			System.out.println(move);
-			System.out.println(nextState.toString());
-			State searchResult = minimax(nextState, forAgent, maxDepth, depth + 1);
-			if (searchResult.value(forAgent) < min) {
+			State searchResult = minimax(nextState, nextForAgent, maxDepth, depth + 1);
+			if (searchResult.value(forAgent) > max) {
 				returnState = searchResult;
+				max = searchResult.value(forAgent);
 			}
-//			System.out.println(searchResult.value(forAgent));
-//			System.out.println(searchResult + move);
-//			System.out.println(depth);
-
 		}
+		//System.out.println(returnState);
 		return returnState;
 	}
 
 	public void test() {
 
-		System.out.println(minimax(b, b.turn, 13, 0));
+		System.out.println(minimax(b, b.turn, 7, 0));
 
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());

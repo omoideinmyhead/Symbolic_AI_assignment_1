@@ -130,9 +130,6 @@ public class State {
 			board[agentY[turn]][agentX[turn]] = ' ';
 			food--;
 			break;
-		case "block":
-			board[agentY[turn]][agentX[turn]] = '#';
-			break;
 		case "up":
 			agentY[turn]--;
 			break;
@@ -144,6 +141,9 @@ public class State {
 			break;
 		case "right":
 			agentX[turn]++;
+			break;
+		case "block":
+			board[agentY[turn]][agentX[turn]] = '#';
 			break;
 		}
 		if (turn == 1) {
