@@ -1,4 +1,5 @@
 package adversarialsearch;
+
 import java.io.*;
 import java.util.*;
 
@@ -8,13 +9,12 @@ public class State {
 	int[] agentX; // the x−coordinates of the agents
 	int[] agentY; // the y−coordinates of the agents
 	int[] score; // the amount of food eaten by each agent
-	int turn; //who’s turn it is , agent 0 or agent 1
+	int turn; // who’s turn it is , agent 0 or agent 1
 	int food; // the total amount of food still available
 	Vector<String> moves;
-	
+
 	// create a class constructor for the State class
-	public State() 
-	{
+	public State() {
 		this.board = null;
 		this.agentX = new int[2];
 		this.agentY = new int[2];
@@ -23,9 +23,8 @@ public class State {
 		this.food = 0;
 		this.moves = new Vector<String>();
 	}
-	
-	public void read(String file) throws IOException 
-	{
+
+	public void read(String file) throws IOException {
 		Scanner readfile = new Scanner(new File(file));
 		String firstLine = readfile.nextLine();
 		String[] segments = firstLine.split(" ");
@@ -33,97 +32,107 @@ public class State {
 		int rows = Integer.parseInt(segments[1]);
 		this.board = new char[rows][columns];
 		int j = 0;
-        while (j < rows) {
-        	int i = 0;
-        	String line = readfile.nextLine();
-        	while (i < columns) {
-        		char currentChar= line.charAt(i);
-        		if (currentChar == 'A') {
-        			agentX[0] = i;
-        			agentY[0] = j;
-        			board[j][i] = ' ';
-        		}else if (currentChar == 'B') {
-        			agentX[1] = i;
-        			agentY[1] = j;
-        			board[j][i] = ' ';
-        		}else {
-        			board[j][i] = currentChar;
-        		};
-        		if (currentChar == '*') {
-        			food += 1;
-        		};
-        		i++;
-        	}
-        	j++;
-        }
-	}
-public String toString() {
-	String printable = "board:\n";
-	for (char[] C: board) {
-		for (char c: C) {
-			printable += c;
+		while (j < rows) {
+			int i = 0;
+			String line = readfile.nextLine();
+			while (i < columns) {
+				char currentChar = line.charAt(i);
+				if (currentChar == 'A') {
+					agentX[0] = i;
+					agentY[0] = j;
+					board[j][i] = ' ';
+				} else if (currentChar == 'B') {
+					agentX[1] = i;
+					agentY[1] = j;
+					board[j][i] = ' ';
+				} else {
+					board[j][i] = currentChar;
+				}
+				;
+				if (currentChar == '*') {
+					food += 1;
+				}
+				;
+				i++;
+			}
+			j++;
 		}
-		printable += "\n";
 	}
-	printable += String.format("agentX: (%d,%d)\n", agentX[0],agentX[1]);
-	printable += String.format("agentY: (%d,%d)\n", agentY[0],agentY[1]);
-	printable += String.format("score: (%d,%d)\n", score[0],score[1]);
-	printable += String.format("turn: %d\n", turn);
-	printable += String.format("food: %d\n", food);
-	return printable;
-}
-		
-public State copy() {
-	State state2 = new State();
-	state2.board = board.clone();
-	state2.agentX = agentX.clone();
-	state2.agentY = agentY.clone();
-	state2.food = food;
-	state2.score = score.clone();
-	state2.turn = turn;
-	return state2;
-}
 
-public Vector<String> legalMoves(int agent){
-	int[] Loc = {agentY[agent],agentX[agent]};
-	Vector<String> moves = new Vector<String>();
-	if (board[Loc[0]][Loc[1]] == '*'){
-		moves.add("eat");
+	public String toString() {
+		String printable = "board:\n";
+		for (char[] C : board) {
+			for (char c : C) {
+				printable += c;
+			}
+			printable += "\n";
+		}
+		printable += String.format("agentX: (%d,%d)\n", agentX[0], agentX[1]);
+		printable += String.format("agentY: (%d,%d)\n", agentY[0], agentY[1]);
+		printable += String.format("score: (%d,%d)\n", score[0], score[1]);
+		printable += String.format("turn: %d\n", turn);
+		printable += String.format("food: %d\n", food);
+		return printable;
 	}
-	else if (board[Loc[0]][Loc[1]] == ' ') {
-		moves.add("block");
-	};
-	if (board[Loc[0]][Loc[1]+1] == ' ' || board[Loc[0]][Loc[1]+1] == '*') {
-		moves.add("right");
-	};
-	if (board[Loc[0]+1][Loc[1]] == ' ' || board[Loc[0]+1][Loc[1]] == '*') {
-		moves.add("down");
-	};
-	if (board[Loc[0]-1][Loc[1]] == ' ' || board[Loc[0]-1][Loc[1]] == '*') {
-		moves.add("up");
-	};
-	if (board[Loc[0]][Loc[1]-1] == ' ' || board[Loc[0]][Loc[1]-1] == '*') {
-		moves.add("left");
-	};
-	
-	return moves;
-	
-}
 
+	public State copy() {
+		State state2 = new State();
+		state2.board = new char[board.length][];
+		for (int i = 0; i < board.length; i++) {
+			state2.board[i] = board[i].clone();
+		}
+		state2.agentX = agentX.clone();
+		state2.agentY = agentY.clone();
+		state2.food = food;
+		state2.score = score.clone();
+		state2.turn = turn;
+		return state2;
+	}
 
-public Vector<String> legalMoves(){
-	return legalMoves(turn);
-}
-public void execute(String action){
-	switch(action) {
+	public Vector<String> legalMoves(int agent) {
+		int[] Loc = { agentY[agent], agentX[agent] };
+		Vector<String> moves = new Vector<String>();
+		if (board[Loc[0]][Loc[1]] == '*') {
+			moves.add("eat");
+		} else if (board[Loc[0]][Loc[1]] == ' ') {
+			moves.add("block");
+		}
+		;
+		if (board[Loc[0]][Loc[1] + 1] == ' ' || board[Loc[0]][Loc[1] + 1] == '*') {
+			moves.add("right");
+		}
+		;
+		if (board[Loc[0] + 1][Loc[1]] == ' ' || board[Loc[0] + 1][Loc[1]] == '*') {
+			moves.add("down");
+		}
+		;
+		if (board[Loc[0] - 1][Loc[1]] == ' ' || board[Loc[0] - 1][Loc[1]] == '*') {
+			moves.add("up");
+		}
+		;
+		if (board[Loc[0]][Loc[1] - 1] == ' ' || board[Loc[0]][Loc[1] - 1] == '*') {
+			moves.add("left");
+		}
+		;
+
+		return moves;
+
+	}
+
+	public Vector<String> legalMoves() {
+		return legalMoves(turn);
+	}
+
+	public void execute(String action) {
+		switch (action) {
 		case "eat":
-			score[turn] ++;
+			score[turn]++;
 			board[agentY[turn]][agentX[turn]] = ' ';
-			food --;
+			food--;
 			break;
 		case "block":
 			board[agentY[turn]][agentX[turn]] = '#';
-		    break;
+			break;
 		case "up":
 			agentY[turn]--;
 			break;
@@ -136,79 +145,45 @@ public void execute(String action){
 		case "right":
 			agentX[turn]++;
 			break;
+		}
+		if (turn == 1) {
+			turn = 0;
+		} else {
+			turn = 1;
+		}
+		;
 	}
-	if (turn == 1) {
-		turn = 0;
-	}else {
-		turn = 1;
-	};
-}
 
-public boolean isLeaf() {
-	System.out.println(legalMoves());
-	if (legalMoves().isEmpty()) {
-		return true;
-	}else if(food == 0) {
-		return true;
+	public boolean isLeaf() {
+		if (legalMoves().isEmpty()) {
+			return true;
+		} else if (food == 0) {
+			return true;
+		}
+		return false;
 	}
-	return false;
-}
 
-public double value(int agent) {
-	if (food == 0) {
-		if (score[0]>score[1]) {
-			if (agent == 0) {
-				return 1;
-			}else {
-				return -1;
+	public int value(int agent) {
+		int value = 0;
+		if (food == 0) {
+			if (score[0] > score[1]) {
+				if (agent == 0) {
+					value = 1;
+				} else {
+					value =  -1;
+				}
+			} else if (score[1] < score[0]) {
+				if (agent == 0) {
+					value = -1;
+				} 
+				else {
+					value = 1;
+				}
 			}
 		}
-		else if (score[1]<score[0]) {
-			if (agent == 0) {
-				return -1;
-			}else {
-				return 1;
-			}
-		};
-	if (legalMoves().isEmpty());
-		return -1;
-	}
-	return 0;
-}
-public State minimax(State s, int forAgent, int maxDepth, int depth) {
-	//base case, just returns itself
-	if (s.isLeaf() || depth == maxDepth){
-		return s;
-	}
-	//general case finds the best value possible given the depth and return that state
-	//min -> min opponent score found in search; returnState -> remembers the state to be returned; forAgent changes to other agent
-	int min = 2;
-	State returnState = new State();
-	forAgent = ((forAgent == 0) ? 1 : 0);
-	// loop goes through all legal moves and finds the minimum value that the opponent can achieve finding the move that yields in min possible score for opponent
-	for (String move: s.legalMoves()){
-		State nextState = s.copy();
-		nextState.execute(move);
-		State minimax = minimax(nextState, forAgent, maxDepth, depth+1);
-		if (minimax.value(forAgent)< min){
-			//special case depth = 0 doesn't return the leaf or max depth node but the next state that produced it
-			if (depth == 0) {
-				returnState = nextState;
-			}
-			//in other depths it returns the leaf
-			else {
-				returnState = minimax;
-			}
+		if (legalMoves().isEmpty()) {
+			value = -1;
 		}
-		
+		return value;
 	}
-	return returnState;
 }
-}
-
-
-
-
-
-
-

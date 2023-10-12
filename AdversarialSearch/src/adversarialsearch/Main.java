@@ -11,7 +11,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(table.toString());
+		//System.out.println(table.minimax(table,0,13,0));
 		Game g=new Game();
 
 		g.test();
