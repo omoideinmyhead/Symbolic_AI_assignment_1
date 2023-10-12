@@ -13,7 +13,6 @@ public class Main {
 		}
 		//System.out.println(table.minimax(table,0,13,0));
 		Game g=new Game();
-
 		g.test();
 			
 	}

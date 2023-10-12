@@ -94,8 +94,6 @@ public class State {
 		Vector<String> moves = new Vector<String>();
 		if (board[Loc[0]][Loc[1]] == '*') {
 			moves.add("eat");
-		} else if (board[Loc[0]][Loc[1]] == ' ') {
-			moves.add("block");
 		}
 		;
 		if (board[Loc[0]][Loc[1] + 1] == ' ' || board[Loc[0]][Loc[1] + 1] == '*') {
@@ -112,6 +110,10 @@ public class State {
 		;
 		if (board[Loc[0]][Loc[1] - 1] == ' ' || board[Loc[0]][Loc[1] - 1] == '*') {
 			moves.add("left");
+		}
+		;
+		if (board[Loc[0]][Loc[1]] == ' ') {
+			moves.add("block");
 		}
 		;
 

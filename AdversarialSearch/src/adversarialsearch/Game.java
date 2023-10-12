@@ -46,7 +46,7 @@ public class Game {
 
 	public void test() {
 
-		System.out.println(minimax(b, b.turn, 7, 0));
+		System.out.println(minimax(b, b.turn, 11, 0));
 
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());
