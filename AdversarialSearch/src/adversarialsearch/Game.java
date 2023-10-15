@@ -101,7 +101,7 @@ public class Game {
 
 	public void test() {
 
-		System.out.println(alphabeta(b, b.turn, 13, 0, -2, 2));
+		System.out.println(alphabeta(b, b.turn, 11, 0, -2, 2));
 
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());
