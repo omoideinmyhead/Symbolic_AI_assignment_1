@@ -104,8 +104,13 @@ public class Game {
 		// System.out.println(returnState);
 		return returnState;
 	}
-
+	
 	public void test() {
+		System.out.println(String.format("the state to be analyzed is:\n%s\n\nTesting the minimax function...\nThe terminal state found is", b.toString()));
+		System.out.println(minimax(b, b.turn, 11, 0));
+		System.out.println("\nNow testing the alfabeta function...\nThe terminal state found is");
+		System.out.println(alfabeta(b, b.turn, 11, 0, -2, 2));
+		System.out.println("\nNow comparing the efficiency of both functions");
 		for (int i=7;i<14;i+=2 ) {
 			countMinimax = 0;
 			minimax(b, b.turn, i, 0);
@@ -113,8 +118,6 @@ public class Game {
 			alfabeta(b, b.turn, i, 0, -2, 2);
 			System.out.println(String.format("turn %d: minimax = %d runs; alfabeta = %d runs", i, countMinimax, countAlfabeta));
 		}
-		System.out.println(alfabeta(b, b.turn, 11, 0, -2, 2));
-
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());
 //			System.out.println("Legal moves for agent with turn:"+b.legalMoves());
