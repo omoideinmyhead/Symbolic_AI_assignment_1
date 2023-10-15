@@ -17,36 +17,91 @@ public class Game {
 	}
 
 	public State minimax(State s, int forAgent, int maxDepth, int depth) {
-		// base case, just returns itself
+		// base case, leaf or maxDepth just returns itself
 		if (s.isLeaf() || depth == maxDepth) {
 			return s;
 		}
-		// general case finds the best value possible given the depth and return that
-		// state
-		// max -> max score found in search; returnState -> remembers the state
-		// to be returned; nextForAgent changes to other agent next turn instead of using min
-		int max = -2;
+		// general case finds the best value possible (max or min) and returns the state
+		// max/min -> keep track of max and min scores;
+		// returnState -> remembers the state to be returned;
 		State returnState = new State();
-		int nextForAgent = ((forAgent == 0) ? 1 : 0);
-		// loop goes through all legal moves and finds the minimum value that the
-		// opponent can achieve finding the move that yields in min possible score for
-		// opponent
+		double max = -2;
+		double min = 2;
+		// loop goes through all legal moves and finds the best move considering if the player is forAgent or not
 		for (String move : s.legalMoves()) {
+			// copies the state to execute the move, necessary because we have to remember the original state for the next moves
 			State nextState = s.copy();
 			nextState.execute(move);
-			State searchResult = minimax(nextState, nextForAgent, maxDepth, depth + 1);
-			if (searchResult.value(forAgent) > max) {
-				returnState = searchResult;
-				max = searchResult.value(forAgent);
+			// we recursively find the result state and save its value in resultValue to optimize the rest of the code (don't have to evaluate it 3 times)
+			State searchResult = minimax(nextState, forAgent, maxDepth, depth + 1);
+			double resultValue = searchResult.value(forAgent);
+			// if the turn belongs to the forAgent we want the state of max value
+			if (forAgent == s.turn) {
+				if (resultValue > max) {
+					returnState = searchResult;
+					max = resultValue;
+				}
+			// else the turn belongs to his opponent and they want the state of min value
+			} else {
+				if (resultValue < min) {
+					returnState = searchResult;
+					min = resultValue;
+				}
 			}
 		}
-		//System.out.println(returnState);
+		// after the loop we return the state of max or min value
+		return returnState;
+	}
+
+	public State alphabeta(State s, int forAgent, int maxDepth, int depth, double alpha, double beta) {
+		// base case, leaf or maxDepth just returns itself
+		if (s.isLeaf() || depth == maxDepth) {
+			return s;
+		}
+		// general case finds the best value possible (max or min) and returns the state
+		// max/min -> keep track of max and min scores;
+		// returnState -> remembers the state to be returned;
+		State returnState = new State();
+		double max = -2;
+		double min = 2;
+		// loop goes through all legal moves and finds the best move considering if the player is forAgent or not
+		for (String move : s.legalMoves()) {
+			// copies the state to execute the move, necessary because we have to remember the original state for the next moves
+			State nextState = s.copy();
+			nextState.execute(move);
+			// we recursively find the result state and save its value in resultValue to optimize the rest of the code (don't have to evaluate it 3 times)
+			State searchResult = alphabeta(nextState, forAgent, maxDepth, depth + 1, alpha, beta);
+			double resultValue = searchResult.value(forAgent);
+			// if the turn belongs to the forAgent we want the state of max value
+			if (forAgent == s.turn) {
+				// if the value is greater than or equal beta this subtree will not be relevant in actual play and we can already return the result
+				if (resultValue >= beta) {
+					return searchResult;
+				}
+				if (resultValue > max) {
+					returnState = searchResult;
+					max = resultValue;
+					alpha = max;
+				}
+			} else {
+				// if the value is lower than or equal alpha this subtree will not be relevant in actual play and we can already return the result
+				if (resultValue <= alpha) {
+					return searchResult;
+				}
+				if (resultValue < min) {
+					returnState = searchResult;
+					min = resultValue;
+					beta = min;
+				}
+			}
+		}
+		// System.out.println(returnState);
 		return returnState;
 	}
 
 	public void test() {
 
-		System.out.println(minimax(b, b.turn, 11, 0));
+		System.out.println(alphabeta(b, b.turn, 13, 0, -2, 2));
 
 //		while (!b.isLeaf()){
 //			System.out.println(b.toString());

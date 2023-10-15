@@ -165,27 +165,21 @@ public class State {
 		return false;
 	}
 
-	public int value(int agent) {
-		int value = 0;
+	public double value(int agent) {
+		int otherAgent = ((agent == 0) ? 1 : 0);
 		if (food == 0) {
-			if (score[0] > score[1]) {
-				if (agent == 0) {
-					value = 1;
-				} else {
-					value =  -1;
-				}
-			} else if (score[1] < score[0]) {
-				if (agent == 0) {
-					value = -1;
-				} 
-				else {
-					value = 1;
-				}
+			if (score[agent] > score[otherAgent]) {
+				return 1;
+			} else if (score[agent] < score[otherAgent]) {
+				return -1;
 			}
 		}
-		if (legalMoves().isEmpty()) {
-			value = -1;
+		if (turn == otherAgent && legalMoves(otherAgent).isEmpty()) {
+			return 1;
 		}
-		return value;
+		if (turn == agent && legalMoves(agent).isEmpty()) {
+			return -1;
+		}
+		return 0;
 	}
 }
